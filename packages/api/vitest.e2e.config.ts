@@ -8,12 +8,6 @@ export default defineConfig({
     },
   },
   test: {
-    include: ['src/**/*.test.ts'],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'html'],
-      include: ['src/**/*.ts'],
-      exclude: ['src/index.ts', 'src/db/seed.cli.ts'],
-    },
+    include: ['e2e/**/*.e2e.test.ts'],
   },
 })
