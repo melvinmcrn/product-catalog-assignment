@@ -7,4 +7,12 @@ export default defineConfig({
       '@': path.resolve(import.meta.dirname, './src'),
     },
   },
+  test: {
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      include: ['src/**/*.ts'],
+      exclude: ['src/index.ts', 'src/db/seed.cli.ts'],
+    },
+  },
 })
