@@ -56,7 +56,10 @@ describe('createConnection', () => {
     })
 
     it('marks id as the autoincrement primary key', () => {
-      const idColumn = db.prepare<[], { name: string; pk: number }>('PRAGMA table_info(products)').all().find((c) => c.name === 'id')
+      const idColumn = db
+        .prepare<[], { name: string; pk: number }>('PRAGMA table_info(products)')
+        .all()
+        .find((c) => c.name === 'id')
 
       expect(idColumn?.pk).toBe(1)
     })
@@ -71,12 +74,17 @@ describe('createConnection', () => {
     it('applies default values for optional columns', () => {
       insertProduct(db)
 
-      const row = db.prepare<[], {
-        logoLocation: string
-        variableDenomPriceMinAmount: string
-        variableDenomPriceMaxAmount: string
-        __typename: string
-      }>('SELECT * FROM products').get()!
+      const row = db
+        .prepare<
+          [],
+          {
+            logoLocation: string
+            variableDenomPriceMinAmount: string
+            variableDenomPriceMaxAmount: string
+            __typename: string
+          }
+        >('SELECT * FROM products')
+        .get()!
 
       expect(row.logoLocation).toBe('')
       expect(row.variableDenomPriceMinAmount).toBe('0.0')

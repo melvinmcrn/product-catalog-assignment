@@ -8,13 +8,9 @@
   "files": {
     "includes": [
       "**/*.ts",
-      "**/*.tsx",
-      "**/*.vue",
       "**/*.mjs",
       "**/*.cjs",
-      "!**/dist",
       "!**/coverage",
-      "!api/data",
       "!**/*.d.ts"
     ]
   },
