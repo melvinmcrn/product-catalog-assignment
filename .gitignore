@@ -2,3 +2,8 @@ node_modules/
 **/dist/
 **/coverage/
 .DS_Store
+
+# Editor: keep shared extension recommendations + formatter settings, ignore the rest
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

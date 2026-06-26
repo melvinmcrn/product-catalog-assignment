@@ -6,13 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": [
-      "**/*.ts",
-      "**/*.mjs",
-      "**/*.cjs",
-      "!**/coverage",
-      "!**/*.d.ts"
-    ]
+    "includes": ["**/*.ts", "**/*.mjs", "**/*.cjs", "!**/coverage", "!**/*.d.ts"]
   },
   "assist": {
     "actions": {
@@ -20,16 +14,7 @@
         "organizeImports": {
           "level": "on",
           "options": {
-            "groups": [
-              [
-                ":PACKAGE:",
-                ":PACKAGE_WITH_PROTOCOL:"
-              ],
-              ":BLANK_LINE:",
-              ":ALIAS:",
-              ":BLANK_LINE:",
-              ":PATH:"
-            ]
+            "groups": [[":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"], ":BLANK_LINE:", ":ALIAS:", ":BLANK_LINE:", ":PATH:"]
           }
         }
       }
