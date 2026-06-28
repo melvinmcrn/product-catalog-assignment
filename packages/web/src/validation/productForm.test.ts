@@ -43,13 +43,13 @@ describe('parseProductForm', () => {
     expect(result.success).toBe(true)
   })
 
-  it('succeeds when the optional logo and price fields are absent, defaulting them to empty strings', () => {
-    const result = parseProductForm(validValues)
+  it('omits the optional logo and price fields when blank, so the backend applies its defaults', () => {
+    const result = parseProductForm({ ...validValues, logoLocation: '', variableDenomPriceMinAmount: '', variableDenomPriceMaxAmount: '' })
     assert(result.success)
     expect(result.data.gvtId).toBe(12)
-    expect(result.data.logoLocation).toBe('')
-    expect(result.data.variableDenomPriceMinAmount).toBe('')
-    expect(result.data.variableDenomPriceMaxAmount).toBe('')
+    expect(result.data.logoLocation).toBeUndefined()
+    expect(result.data.variableDenomPriceMinAmount).toBeUndefined()
+    expect(result.data.variableDenomPriceMaxAmount).toBeUndefined()
   })
 })
 

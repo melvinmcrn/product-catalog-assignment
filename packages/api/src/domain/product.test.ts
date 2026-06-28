@@ -187,6 +187,16 @@ describe('createProductSchema', () => {
     it('rejects an invalid URL when provided', () => {
       expect(createProductSchema.safeParse({ ...makeValidInput(), logoLocation: 'not-a-url' }).success).toBe(false)
     })
+
+    it('is undefined when the field is omitted', () => {
+      const result = createProductSchema.parse(makeRequiredInput())
+
+      expect(result.logoLocation).toBeUndefined()
+    })
+
+    it('rejects an empty string (optional fields must be omitted, not blank)', () => {
+      expect(createProductSchema.safeParse({ ...makeRequiredInput(), logoLocation: '' }).success).toBe(false)
+    })
   })
 
   describe('variableDenomPriceMinAmount', () => {
@@ -205,6 +215,16 @@ describe('createProductSchema', () => {
     it('rejects a trailing-dot format', () => {
       expect(createProductSchema.safeParse({ ...makeValidInput(), variableDenomPriceMinAmount: '1.' }).success).toBe(false)
     })
+
+    it('is undefined when the field is omitted', () => {
+      const result = createProductSchema.parse(makeRequiredInput())
+
+      expect(result.variableDenomPriceMinAmount).toBeUndefined()
+    })
+
+    it('rejects an empty string (optional fields must be omitted, not blank)', () => {
+      expect(createProductSchema.safeParse({ ...makeRequiredInput(), variableDenomPriceMinAmount: '' }).success).toBe(false)
+    })
   })
 
   describe('variableDenomPriceMaxAmount', () => {
@@ -222,6 +242,16 @@ describe('createProductSchema', () => {
 
     it('rejects a trailing-dot format', () => {
       expect(createProductSchema.safeParse({ ...makeValidInput(), variableDenomPriceMaxAmount: '1.' }).success).toBe(false)
+    })
+
+    it('is undefined when the field is omitted', () => {
+      const result = createProductSchema.parse(makeRequiredInput())
+
+      expect(result.variableDenomPriceMaxAmount).toBeUndefined()
+    })
+
+    it('rejects an empty string (optional fields must be omitted, not blank)', () => {
+      expect(createProductSchema.safeParse({ ...makeRequiredInput(), variableDenomPriceMaxAmount: '' }).success).toBe(false)
     })
   })
 })

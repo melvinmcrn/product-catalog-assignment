@@ -56,8 +56,10 @@ describe('ProductForm', () => {
     await fillForm(wrapper, validInput)
     await wrapper.get('form').trigger('submit.prevent')
 
-    const payload = wrapper.emitted('submit')?.[0]?.[0]
-    expect(payload).toMatchObject({ gvtId: 12, name: 'Sultan Voucher', logoLocation: '' })
+    const payload = wrapper.emitted('submit')?.[0]?.[0] as Record<string, unknown>
+    expect(payload).toMatchObject({ gvtId: 12, name: 'Sultan Voucher' })
+    // Blank optional fields are omitted so the backend applies its defaults.
+    expect(payload.logoLocation).toBeUndefined()
   })
 
   it('disables the submit button and shows a saving label while a request is pending', () => {

@@ -54,6 +54,17 @@ describe('Products API (e2e)', () => {
     expect(all.body).toHaveLength(SEED_COUNT + 1)
   })
 
+  it('applies defaults when the optional logo and price fields are omitted', async () => {
+    const created = await request(app)
+      .post('/api/products')
+      .send(productBody({ name: 'No Logo' }))
+
+    expect(created.status).toBe(201)
+    expect(created.body.logoLocation).toBe('')
+    expect(created.body.variableDenomPriceMinAmount).toBe('0.0')
+    expect(created.body.variableDenomPriceMaxAmount).toBe('0.0')
+  })
+
   it('persists an update across requests', async () => {
     const updated = await request(app)
       .put(`/api/products/${SEEDED_ID}`)

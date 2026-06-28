@@ -16,4 +16,10 @@ export interface Product {
 }
 
 // id and __typename are server-managed, never client-supplied.
-export type ProductInput = Omit<Product, 'id' | '__typename'>
+// logoLocation and the price fields are optional: when blank they're omitted from the request
+// body (sent as undefined) and the backend fills in its defaults.
+export type ProductInput = Omit<Product, 'id' | '__typename' | 'logoLocation' | 'variableDenomPriceMinAmount' | 'variableDenomPriceMaxAmount'> & {
+  logoLocation?: string
+  variableDenomPriceMinAmount?: string
+  variableDenomPriceMaxAmount?: string
+}

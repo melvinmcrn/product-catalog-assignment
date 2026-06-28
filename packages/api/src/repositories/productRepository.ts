@@ -25,11 +25,13 @@ const VALUES = FIELDS.map((f) => `@${f}`).join(', ')
 const SET_CLAUSE = FIELDS.map((f) => `${f}=@${f}`).join(', ')
 
 // Defaults for optional fields live in the repository so a row is always complete on the way to the DB.
+// Coalesce per field rather than spreading defaults first: a validated input can carry an explicit
+// `undefined` (the schema normalises blank optionals to undefined), which would otherwise clobber a default.
 const toRow = (input: ProductInput) => ({
-  logoLocation: '',
-  variableDenomPriceMinAmount: '0.0',
-  variableDenomPriceMaxAmount: '0.0',
   ...input,
+  logoLocation: input.logoLocation ?? '',
+  variableDenomPriceMinAmount: input.variableDenomPriceMinAmount ?? '0.0',
+  variableDenomPriceMaxAmount: input.variableDenomPriceMaxAmount ?? '0.0',
   __typename: TYPENAME,
 })
 

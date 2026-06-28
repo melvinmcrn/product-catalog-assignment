@@ -48,6 +48,14 @@ describe('ProductRepository', () => {
       expect(product.variableDenomPriceMaxAmount).toBe('0.0')
     })
 
+    it('applies defaults when optional fields are present but undefined', () => {
+      const product = repo.create(makeInput({ logoLocation: undefined, variableDenomPriceMinAmount: undefined, variableDenomPriceMaxAmount: undefined }))
+
+      expect(product.logoLocation).toBe('')
+      expect(product.variableDenomPriceMinAmount).toBe('0.0')
+      expect(product.variableDenomPriceMaxAmount).toBe('0.0')
+    })
+
     it('persists provided optional fields', () => {
       const product = repo.create(
         makeInput({
