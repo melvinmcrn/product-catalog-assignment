@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import type { ProductInput } from '@/types/product'
-import { type ProductField, parseProductForm, validateProductField } from '@/validation/productForm'
+import { maxLengthForField, type ProductField, parseProductForm, validateProductField } from '@/validation/productForm'
 
 const props = defineProps<{ submitLabel: string; initialValues?: ProductInput; pending?: boolean }>()
 const emit = defineEmits<{ submit: [values: ProductInput] }>()
@@ -38,6 +38,7 @@ interface FieldConfig {
   full?: boolean
 }
 
+// The input length caps come from the zod schema (maxLengthForField), so they can't drift from validation.
 const textFields: FieldConfig[] = [
   { key: 'name', label: 'Name', full: true },
   { key: 'gvtId', label: 'GVT ID', placeholder: 'e.g. 1679' },
@@ -107,6 +108,7 @@ function onSubmit() {
           v-model="values[field.key]"
           :name="field.key"
           type="text"
+          :maxlength="maxLengthForField(field.key)"
           :placeholder="field.placeholder"
           :aria-invalid="Boolean(errors[field.key])"
           :aria-describedby="errors[field.key] ? `${field.key}-error` : undefined"
@@ -123,6 +125,7 @@ function onSubmit() {
           :id="field.key"
           v-model="values[field.key]"
           :name="field.key"
+          :maxlength="maxLengthForField(field.key)"
           :aria-invalid="Boolean(errors[field.key])"
           :aria-describedby="errors[field.key] ? `${field.key}-error` : undefined"
           @blur="onBlur(field.key)"

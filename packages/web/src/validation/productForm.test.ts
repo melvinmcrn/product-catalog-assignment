@@ -1,6 +1,6 @@
 import { assert, describe, expect, it } from 'vitest'
 
-import { parseProductForm, validateProductField } from './productForm'
+import { maxLengthForField, parseProductForm, validateProductField } from './productForm'
 
 const validValues = {
   gvtId: '12',
@@ -50,6 +50,27 @@ describe('parseProductForm', () => {
     expect(result.data.logoLocation).toBeUndefined()
     expect(result.data.variableDenomPriceMinAmount).toBeUndefined()
     expect(result.data.variableDenomPriceMaxAmount).toBeUndefined()
+  })
+})
+
+describe('maxLengthForField', () => {
+  it('derives the limit from the zod schema for plain string fields', () => {
+    expect(maxLengthForField('name')).toBe(120)
+    expect(maxLengthForField('productTagline')).toBe(200)
+    expect(maxLengthForField('productUrl')).toBe(50)
+    expect(maxLengthForField('orderUrl')).toBe(500)
+    expect(maxLengthForField('shortDescription')).toBe(5000)
+    expect(maxLengthForField('longDescription')).toBe(5000)
+  })
+
+  it('unwraps the optional/union wrapper to find the limit on logoLocation', () => {
+    expect(maxLengthForField('logoLocation')).toBe(500)
+  })
+
+  it('returns undefined for fields that have no length limit', () => {
+    expect(maxLengthForField('gvtId')).toBeUndefined()
+    expect(maxLengthForField('variableDenomPriceMinAmount')).toBeUndefined()
+    expect(maxLengthForField('variableDenomPriceMaxAmount')).toBeUndefined()
   })
 })
 

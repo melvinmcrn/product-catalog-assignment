@@ -74,6 +74,14 @@ describe('ProductForm', () => {
     expect(wrapper.get('[data-testid="field-grid"]').classes()).toContain('items-start')
   })
 
+  it('caps each input length to its validation limit', () => {
+    const wrapper = mount(ProductForm, { props: { submitLabel: 'Create' } })
+
+    expect(wrapper.get('[name="name"]').attributes('maxlength')).toBe('120')
+    expect(wrapper.get('[name="productUrl"]').attributes('maxlength')).toBe('50')
+    expect(wrapper.get('[name="longDescription"]').attributes('maxlength')).toBe('5000')
+  })
+
   it('validates a single field on blur without submitting', async () => {
     const wrapper = mount(ProductForm, { props: { submitLabel: 'Create' } })
 

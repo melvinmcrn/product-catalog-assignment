@@ -26,6 +26,33 @@ export const productFormSchema = z.object({
 
 export type ProductField = keyof typeof productFormSchema.shape
 
+// Reads the `.max()` length straight off the zod schema so the form's input caps stay in sync with
+// validation. Recurses through optional/union wrappers (e.g. logoLocation is `.optional().or('')`).
+function maxLength(schema: z.ZodType): number | undefined {
+  const direct = (schema as { maxLength?: number | null }).maxLength
+  if (typeof direct === 'number') return direct
+
+  const unwrap = (schema as { unwrap?: () => z.ZodType }).unwrap
+  if (typeof unwrap === 'function') {
+    const inner = maxLength(unwrap.call(schema))
+    if (inner != null) return inner
+  }
+
+  const options = (schema as { def?: { options?: z.ZodType[] } }).def?.options
+  if (Array.isArray(options)) {
+    for (const option of options) {
+      const inner = maxLength(option)
+      if (inner != null) return inner
+    }
+  }
+
+  return undefined
+}
+
+export function maxLengthForField(field: ProductField): number | undefined {
+  return maxLength(productFormSchema.shape[field])
+}
+
 export function validateProductField(field: ProductField, value: unknown): string | undefined {
   const result = productFormSchema.shape[field].safeParse(value)
   return result.success ? undefined : result.error.issues[0]?.message
