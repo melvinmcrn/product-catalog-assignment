@@ -3,15 +3,15 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { api, httpClient } from './client'
 
-let mockClient: MockAdapter
+let mockInstance: MockAdapter
 
 describe('api client', () => {
   beforeEach(() => {
-    mockClient = new MockAdapter(httpClient)
+    mockInstance = new MockAdapter(httpClient)
   })
 
   afterEach(() => {
-    mockClient.restore()
+    mockInstance.restore()
   })
 
   it('targets the absolute API origin', () => {
@@ -19,23 +19,45 @@ describe('api client', () => {
   })
 
   it('lists products', async () => {
-    mockClient.onGet('/api/products').reply(200, [{ id: 1 }])
+    mockInstance.onGet('/api/products').reply(200, [{ id: 1 }])
     expect(await api.list()).toEqual([{ id: 1 }])
   })
 
   it('sends the search term as a query param', async () => {
-    mockClient.onGet('/api/products').reply(200, [])
+    mockInstance.onGet('/api/products').reply(200, [])
     await api.list('a b')
-    expect(mockClient.history.get[0].params).toEqual({ search: 'a b' })
+    expect(mockInstance.history.get[0].params).toEqual({ search: 'a b' })
+  })
+
+  it('gets a single product by id', async () => {
+    mockInstance.onGet('/api/products/7').reply(200, { id: 7 })
+    expect(await api.get(7)).toEqual({ id: 7 })
+  })
+
+  it('creates a product via POST and returns the created body', async () => {
+    const input = { name: 'New' } as never
+    mockInstance.onPost('/api/products', input).reply(201, { id: 9, name: 'New' })
+    expect(await api.create(input)).toEqual({ id: 9, name: 'New' })
+  })
+
+  it('updates a product via PUT and returns the updated body', async () => {
+    const input = { name: 'Edited' } as never
+    mockInstance.onPut('/api/products/5', input).reply(200, { id: 5, name: 'Edited' })
+    expect(await api.update(5, input)).toEqual({ id: 5, name: 'Edited' })
   })
 
   it('throws the API error message on a non-2xx response', async () => {
-    mockClient.onGet('/api/products/99').reply(404, { error: { message: 'Not found' } })
+    mockInstance.onGet('/api/products/99').reply(404, { error: { message: 'Not found' } })
     await expect(api.get(99)).rejects.toThrow('Not found')
   })
 
+  it('falls back to the axios message when the server sends no error body', async () => {
+    mockInstance.onGet('/api/products').networkError()
+    await expect(api.list()).rejects.toThrow('Network Error')
+  })
+
   it('resolves undefined for a 204 No Content (delete)', async () => {
-    mockClient.onDelete('/api/products/1').reply(204)
+    mockInstance.onDelete('/api/products/1').reply(204)
     await expect(api.remove(1)).resolves.toBeUndefined()
   })
 })
