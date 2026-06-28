@@ -28,10 +28,23 @@ const logoFailed = ref(false)
 const hasLogo = computed(() => Boolean(store.current?.logoLocation) && !logoFailed.value)
 
 const confirming = ref(false)
+const deleteError = ref<string | null>(null)
+
+function openConfirm() {
+  deleteError.value = null
+  confirming.value = true
+}
 
 async function onDelete() {
-  await store.remove(productId.value)
-  router.push('/')
+  try {
+    await store.remove(productId.value)
+    router.push('/')
+  } catch (error) {
+    // Keep the product on screen and surface the failure inline so the user can retry,
+    // rather than navigating away or replacing the whole view with an error.
+    deleteError.value = (error as Error).message
+    confirming.value = false
+  }
 }
 
 // Refetch on id change (covers component reuse) and clear the per-product image-failure flag so each product retries its banner.
@@ -40,6 +53,7 @@ watch(
   productId,
   (id) => {
     logoFailed.value = false
+    deleteError.value = null
     store.fetchOne(id)
   },
   { immediate: true },
@@ -52,7 +66,8 @@ watch(
 
     <p v-if="store.loading" class="text-muted-foreground">Loading…</p>
     <p v-else-if="notFound" class="text-muted-foreground">Product not found.</p>
-    <p v-else-if="store.error" role="alert" class="text-destructive">{{ store.error }}</p>
+    <!-- Full-view error only when nothing loaded (a fetch failure); a delete failure keeps the product and shows inline. -->
+    <p v-else-if="store.error && !store.current" role="alert" class="text-destructive">{{ store.error }}</p>
 
     <article v-else-if="store.current" class="grid gap-4">
       <div data-testid="banner" class="aspect-[640/241] max-h-72 w-full select-none overflow-hidden rounded-xl bg-muted">
@@ -78,9 +93,11 @@ watch(
           <Button as-child variant="outline">
             <RouterLink :to="`/products/${store.current.id}/edit`">Edit</RouterLink>
           </Button>
-          <Button variant="destructive" @click="confirming = true">Delete</Button>
+          <Button variant="destructive" @click="openConfirm">Delete</Button>
         </div>
       </header>
+
+      <p v-if="deleteError" role="alert" class="text-sm text-destructive">{{ deleteError }}</p>
 
       <Dialog v-model:open="confirming">
         <DialogContent>

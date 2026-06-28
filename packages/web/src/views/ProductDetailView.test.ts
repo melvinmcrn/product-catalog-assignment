@@ -196,6 +196,21 @@ describe('ProductDetailView', () => {
     expect(push).toHaveBeenCalledWith('/')
   })
 
+  it('keeps the product visible and shows an error when deletion fails', async () => {
+    const wrapper = mountView()
+    const store = useProductStore()
+    vi.mocked(store.remove).mockRejectedValue(new Error('Could not delete'))
+
+    await clickButton(wrapper, 'Delete')
+    await flushPromises()
+    await clickDialogButton('Confirm')
+    await flushPromises()
+
+    expect(push).not.toHaveBeenCalled()
+    expect(wrapper.text()).toContain('Could not delete')
+    expect(wrapper.text()).toContain('Sultan Voucher')
+  })
+
   it('does not delete when the confirmation is cancelled', async () => {
     const wrapper = mountView()
     const store = useProductStore()
