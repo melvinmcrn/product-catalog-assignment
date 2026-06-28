@@ -28,3 +28,25 @@ In the application, it is required to have a form handle the editing product in 
 - The application needs to run following your instructions on the Readme.md file
 - You will have 1 week to complete the task
 - The clock will start when the task is sent
+
+
+# Additional Info from Email
+
+### Notes & Tips for the Assignment
+Core Focus: Since this is a full-stack role, we will be looking closely at back-end logic and data persistence (for example, a functioning API layer and a way to save and retrieve data).
+
+AI Tooling Policy: You are welcome to use AI help for this assignment, as long as it is not "vibe coding." We expect you to deeply understand the code you submit and be ready to speak to it.
+
+Language & Frameworks:
+
+You can use either JavaScript or TypeScript based on your judgment.
+
+Please note that the test description in the README.md file requires the use of the Vue.js framework.
+
+Testing: Please ensure you include test cases.
+
+UX vs. UI: Both editing and creation are allowed. Regarding the README statement, "We will not be evaluating your design, but yes, how the UX is presented," this means that UI (e.g., fancy CSS) is not the focus, but the way the user experience (UX) is presented will be evaluated. You can use fancy CSS if you like, but it is not the main focus of the assignment.
+
+What We Are Looking For: In summary, we are not seeking candidates who merely check off a list of requirements. Instead, we are interested in your overall approach to the assignment, including your decision-making process and the quality of your code.
+
+The Presentation Round: The final presentation will be freeform, allowing you to present the assignment however you see fit.
