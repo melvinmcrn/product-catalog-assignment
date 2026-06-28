@@ -51,6 +51,23 @@ describe('api client', () => {
     await expect(api.get(99)).rejects.toThrow('Not found')
   })
 
+  it('maps a 422 validation response into per-field errors on the thrown error', async () => {
+    mockInstance.onPost('/api/products').reply(422, {
+      error: {
+        message: 'Validation failed',
+        issues: [
+          { path: ['name'], message: 'Required' },
+          { path: ['gvtId'], message: 'Must be a number' },
+        ],
+      },
+    })
+
+    await expect(api.create({} as never)).rejects.toMatchObject({
+      message: 'Validation failed',
+      fieldErrors: { name: 'Required', gvtId: 'Must be a number' },
+    })
+  })
+
   it('falls back to the axios message when the server sends no error body', async () => {
     mockInstance.onGet('/api/products').networkError()
     await expect(api.list()).rejects.toThrow('Network Error')

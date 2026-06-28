@@ -2,6 +2,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { flushPromises, mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
+import { ApiError } from '@/api/client'
 import ProductForm from '@/components/ProductForm.vue'
 import { useProductStore } from '@/stores/products'
 import type { Product, ProductInput } from '@/types/product'
@@ -42,6 +43,21 @@ describe('ProductCreateView', () => {
 
     expect(store.create).toHaveBeenCalledWith(input)
     expect(push).toHaveBeenCalledWith('/products/7')
+  })
+
+  it('passes server-side field errors to the form and does not redirect when create is rejected', async () => {
+    const wrapper = mount(ProductCreateView, {
+      global: { plugins: [createTestingPinia({ stubActions: true })], stubs: { RouterLink: RouterLinkStub } },
+    })
+    const store = useProductStore()
+    push.mockClear()
+    vi.mocked(store.create).mockRejectedValue(new ApiError('Validation failed', { name: 'Required' }))
+
+    await wrapper.findComponent(ProductForm).vm.$emit('submit', input)
+    await flushPromises()
+
+    expect(wrapper.findComponent(ProductForm).props('serverErrors')).toEqual({ name: 'Required' })
+    expect(push).not.toHaveBeenCalled()
   })
 
   it('passes the store loading state to the form so submit is disabled while saving', () => {

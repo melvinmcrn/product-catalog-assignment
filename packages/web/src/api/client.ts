@@ -6,11 +6,39 @@ const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5001'
 
 export const httpClient = axios.create({ baseURL: BASE_URL })
 
-// Map any non-2xx into a plain Error carrying the API's error.message, so the
-// store and views deal with clean messages rather than AxiosError internals.
+// An error from the API, optionally carrying the backend's per-field validation messages
+// (zod issues) keyed by field name, so a form can show them inline instead of a generic banner.
+export class ApiError extends Error {
+  readonly fieldErrors?: Record<string, string>
+  constructor(message: string, fieldErrors?: Record<string, string>) {
+    super(message)
+    this.name = 'ApiError'
+    this.fieldErrors = fieldErrors
+  }
+}
+
+type ApiIssue = { path?: unknown[]; message?: string }
+
+// Reduce zod issues to the first message per top-level field; undefined when there are none.
+function toFieldErrors(issues: unknown): Record<string, string> | undefined {
+  if (!Array.isArray(issues)) return undefined
+  const map: Record<string, string> = {}
+  for (const issue of issues as ApiIssue[]) {
+    const field = String(issue.path?.[0] ?? '')
+    if (field && issue.message && !map[field]) map[field] = issue.message
+  }
+  return Object.keys(map).length > 0 ? map : undefined
+}
+
+// Map any non-2xx into an ApiError carrying the API's error.message (and any field errors),
+// so the store and views deal with clean messages rather than AxiosError internals.
 httpClient.interceptors.response.use(
   (res) => res,
-  (error) => Promise.reject(new Error(error?.response?.data?.error?.message ?? error?.message ?? 'Request failed')),
+  (error) => {
+    const apiError = error?.response?.data?.error
+    const message = apiError?.message ?? error?.message ?? 'Request failed'
+    return Promise.reject(new ApiError(message, toFieldErrors(apiError?.issues)))
+  },
 )
 
 export const api = {

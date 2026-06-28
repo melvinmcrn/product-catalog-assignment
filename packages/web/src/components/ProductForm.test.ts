@@ -1,5 +1,6 @@
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
+import { nextTick } from 'vue'
 
 import ProductForm from './ProductForm.vue'
 
@@ -60,6 +61,14 @@ describe('ProductForm', () => {
     expect(payload).toMatchObject({ gvtId: 12, name: 'Sultan Voucher' })
     // Blank optional fields are omitted so the backend applies its defaults.
     expect(payload.logoLocation).toBeUndefined()
+  })
+
+  it('surfaces server-side field errors passed in via the serverErrors prop', async () => {
+    const wrapper = mount(ProductForm, { props: { submitLabel: 'Create', serverErrors: { name: 'Name already taken' } } })
+    await nextTick()
+
+    expect(wrapper.get('[name="name"]').attributes('aria-invalid')).toBe('true')
+    expect(wrapper.text()).toContain('Name already taken')
   })
 
   it('disables the submit button and shows a saving label while a request is pending', () => {

@@ -9,7 +9,13 @@ import { Textarea } from '@/components/ui/textarea'
 import type { ProductInput } from '@/types/product'
 import { maxLengthForField, type ProductField, parseProductForm, validateProductField } from '@/validation/productForm'
 
-const props = defineProps<{ submitLabel: string; initialValues?: ProductInput; pending?: boolean }>()
+const props = defineProps<{
+  submitLabel: string
+  initialValues?: ProductInput
+  pending?: boolean
+  // Per-field messages from the backend (e.g. a 422), keyed by field name, merged into the inline errors below.
+  serverErrors?: Record<string, string>
+}>()
 const emit = defineEmits<{ submit: [values: ProductInput] }>()
 
 type FormValues = Record<ProductField, string>
@@ -60,6 +66,16 @@ const textareaFields: FieldConfig[] = [
 
 const values = reactive<FormValues>(toFormValues(props.initialValues))
 const errors = ref<Partial<Record<ProductField, string>>>({})
+
+// Merge backend validation errors in as they arrive, so a rejected submit shows messages inline
+// on the offending fields. Client-side blur/submit validation overwrites them once a field changes.
+watch(
+  () => props.serverErrors,
+  (serverErrors) => {
+    if (serverErrors && Object.keys(serverErrors).length > 0) errors.value = { ...errors.value, ...serverErrors }
+  },
+  { immediate: true, deep: true },
+)
 
 // GVT ID is a numeric-only field: drop anything that isn't a digit as the user types,
 // so the input physically can't hold a non-numeric value (the backend would reject it anyway).
