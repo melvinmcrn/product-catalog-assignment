@@ -111,6 +111,20 @@ describe('ProductRepository', () => {
       expect(repo.findAll('unique-tagline-token')).toHaveLength(1)
       expect(repo.findAll('unique-title-token')).toHaveLength(1)
     })
+
+    it('treats LIKE wildcards in the search term as literal text', () => {
+      repo.create(makeInput({ name: 'Game of Sultans' }))
+
+      // Unescaped, '%' and '_' are SQL wildcards that would match every row.
+      expect(repo.findAll('%')).toEqual([])
+      expect(repo.findAll('_')).toEqual([])
+    })
+
+    it('finds a row by a literal wildcard character it actually contains', () => {
+      repo.create(makeInput({ name: '50% Bonus Pack' }))
+
+      expect(repo.findAll('50%')).toHaveLength(1)
+    })
   })
 
   describe('update', () => {

@@ -39,9 +39,12 @@ export class ProductRepository {
   findAll(search?: string): Product[] {
     if (!search) return this.db.prepare<[], Product>('SELECT * FROM products ORDER BY id').all()
 
-    const q = `%${search}%`
+    // Escape LIKE wildcards (% _) and the escape char itself so the term is matched literally, not as a pattern.
+    const q = `%${search.replace(/[\\%_]/g, (ch) => `\\${ch}`)}%`
     return this.db
-      .prepare<{ q: string }, Product>('SELECT * FROM products WHERE name LIKE @q OR productTagline LIKE @q OR productTitle LIKE @q ORDER BY id')
+      .prepare<{ q: string }, Product>(
+        "SELECT * FROM products WHERE name LIKE @q ESCAPE '\\' OR productTagline LIKE @q ESCAPE '\\' OR productTitle LIKE @q ESCAPE '\\' ORDER BY id",
+      )
       .all({ q })
   }
 

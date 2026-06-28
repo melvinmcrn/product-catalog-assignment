@@ -89,8 +89,8 @@ describe('createProductSchema', () => {
       expect(createProductSchema.safeParse({ ...makeValidInput(), shortDescription: '' }).success).toBe(false)
     })
 
-    it('rejects a value longer than 1000 characters', () => {
-      expect(createProductSchema.safeParse({ ...makeValidInput(), shortDescription: 'a'.repeat(1001) }).success).toBe(false)
+    it('rejects a value longer than 5000 characters', () => {
+      expect(createProductSchema.safeParse({ ...makeValidInput(), shortDescription: 'a'.repeat(5001) }).success).toBe(false)
     })
   })
 
@@ -99,8 +99,8 @@ describe('createProductSchema', () => {
       expect(createProductSchema.safeParse({ ...makeValidInput(), longDescription: '' }).success).toBe(false)
     })
 
-    it('rejects a value longer than 4000 characters', () => {
-      expect(createProductSchema.safeParse({ ...makeValidInput(), longDescription: 'a'.repeat(4001) }).success).toBe(false)
+    it('rejects a value longer than 5000 characters', () => {
+      expect(createProductSchema.safeParse({ ...makeValidInput(), longDescription: 'a'.repeat(5001) }).success).toBe(false)
     })
   })
 
@@ -172,8 +172,8 @@ describe('createProductSchema', () => {
       expect(createProductSchema.safeParse({ ...makeValidInput(), productTitle: '' }).success).toBe(false)
     })
 
-    it('rejects a value longer than 50 characters', () => {
-      expect(createProductSchema.safeParse({ ...makeValidInput(), productTitle: 'a'.repeat(51) }).success).toBe(false)
+    it('rejects a value longer than 120 characters', () => {
+      expect(createProductSchema.safeParse({ ...makeValidInput(), productTitle: 'a'.repeat(121) }).success).toBe(false)
     })
 
     it('trims leading and trailing whitespace', () => {
