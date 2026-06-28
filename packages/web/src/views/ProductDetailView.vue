@@ -97,6 +97,29 @@ watch(
 
       <p v-if="hasPrice" class="text-sm text-muted-foreground">Price: {{ priceRange }}</p>
 
+      <dl data-testid="details" class="grid gap-x-6 gap-y-2 border-t border-border pt-6 text-sm sm:grid-cols-2">
+        <div class="grid gap-0.5">
+          <dt class="text-muted-foreground">GVT ID</dt>
+          <dd>{{ store.current.gvtId }}</dd>
+        </div>
+        <div class="grid gap-0.5">
+          <dt class="text-muted-foreground">Voucher type</dt>
+          <dd>{{ store.current.voucherTypeName }}</dd>
+        </div>
+        <div class="grid gap-0.5">
+          <dt class="text-muted-foreground">Product URL</dt>
+          <dd class="break-all">{{ store.current.productUrl }}</dd>
+        </div>
+        <div class="grid gap-0.5">
+          <dt class="text-muted-foreground">Order URL</dt>
+          <dd class="break-all">
+            <a :href="store.current.orderUrl" target="_blank" rel="noopener noreferrer" class="underline hover:text-foreground">
+              {{ store.current.orderUrl }}
+            </a>
+          </dd>
+        </div>
+      </dl>
+
       <section class="prose prose-invert max-w-none border-t border-border pt-6" v-html="safeLongDescription" />
       <section class="prose prose-invert max-w-none border-t border-border pt-6 text-sm" v-html="safeShortDescription" />
     </article>

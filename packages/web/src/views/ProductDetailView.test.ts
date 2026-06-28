@@ -77,6 +77,15 @@ describe('ProductDetailView', () => {
     expect(wrapper.text()).toContain('Price: 5.00 - 50.00')
   })
 
+  it('renders the remaining product fields (GVT ID, voucher type, product and order URLs)', () => {
+    const wrapper = mountView()
+    const details = wrapper.get('[data-testid="details"]')
+    expect(details.text()).toContain('12')
+    expect(details.text()).toContain('Game')
+    expect(details.text()).toContain('/ca/sultan')
+    expect(details.find('a[href="https://example.com"]').exists()).toBe(true)
+  })
+
   it('sanitizes HTML descriptions before rendering them', () => {
     const wrapper = mountView()
     expect(wrapper.html()).not.toContain('onerror')
