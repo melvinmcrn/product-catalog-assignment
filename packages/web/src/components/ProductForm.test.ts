@@ -34,10 +34,10 @@ describe('ProductForm', () => {
   it('shows an error and blocks submit for an invalid field value', async () => {
     const wrapper = mount(ProductForm, { props: { submitLabel: 'Create' } })
 
-    await fillForm(wrapper, { ...validInput, gvtId: '1a' })
+    await fillForm(wrapper, { ...validInput, productUrl: 'not-a-relative-url' })
     await wrapper.get('form').trigger('submit.prevent')
 
-    expect(wrapper.get('[name="gvtId"]').attributes('aria-invalid')).toBe('true')
+    expect(wrapper.get('[name="productUrl"]').attributes('aria-invalid')).toBe('true')
     expect(wrapper.emitted('submit')).toBeUndefined()
   })
 
@@ -72,6 +72,15 @@ describe('ProductForm', () => {
   it('top-aligns grid fields so an error under one input does not misalign its row neighbour', () => {
     const wrapper = mount(ProductForm, { props: { submitLabel: 'Create' } })
     expect(wrapper.get('[data-testid="field-grid"]').classes()).toContain('items-start')
+  })
+
+  it('strips non-digit characters from the GVT ID field as it is typed', async () => {
+    const wrapper = mount(ProductForm, { props: { submitLabel: 'Create' } })
+    const input = wrapper.get('[name="gvtId"]')
+
+    await input.setValue('1a2b3')
+
+    expect((input.element as HTMLInputElement).value).toBe('123')
   })
 
   it('caps each input length to its validation limit', () => {

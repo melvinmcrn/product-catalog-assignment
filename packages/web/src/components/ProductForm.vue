@@ -36,12 +36,13 @@ interface FieldConfig {
   label: string
   placeholder?: string
   full?: boolean
+  numeric?: boolean
 }
 
 // The input length caps come from the zod schema (maxLengthForField), so they can't drift from validation.
 const textFields: FieldConfig[] = [
   { key: 'name', label: 'Name', full: true },
-  { key: 'gvtId', label: 'GVT ID', placeholder: 'e.g. 1679' },
+  { key: 'gvtId', label: 'GVT ID', placeholder: 'e.g. 1679', numeric: true },
   { key: 'voucherTypeName', label: 'Voucher type' },
   { key: 'productTitle', label: 'Title' },
   { key: 'productTagline', label: 'Tagline' },
@@ -59,6 +60,16 @@ const textareaFields: FieldConfig[] = [
 
 const values = reactive<FormValues>(toFormValues(props.initialValues))
 const errors = ref<Partial<Record<ProductField, string>>>({})
+
+// GVT ID is a numeric-only field: drop anything that isn't a digit as the user types,
+// so the input physically can't hold a non-numeric value (the backend would reject it anyway).
+watch(
+  () => values.gvtId,
+  (value) => {
+    const digitsOnly = value.replace(/\D/g, '')
+    if (digitsOnly !== value) values.gvtId = digitsOnly
+  },
+)
 
 function onBlur(key: ProductField) {
   const message = validateProductField(key, values[key])
@@ -108,6 +119,7 @@ function onSubmit() {
           v-model="values[field.key]"
           :name="field.key"
           type="text"
+          :inputmode="field.numeric ? 'numeric' : undefined"
           :maxlength="maxLengthForField(field.key)"
           :placeholder="field.placeholder"
           :aria-invalid="Boolean(errors[field.key])"
