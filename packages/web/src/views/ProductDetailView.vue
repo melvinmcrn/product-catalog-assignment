@@ -137,8 +137,8 @@ watch(
         </div>
       </dl>
 
-      <section class="prose prose-invert max-w-none border-t border-border pt-6" v-html="safeLongDescription" />
       <section class="prose prose-invert max-w-none border-t border-border pt-6 text-sm" v-html="safeShortDescription" />
+      <section class="prose prose-invert max-w-none border-t border-border pt-6" v-html="safeLongDescription" />
     </article>
   </div>
 </template>
