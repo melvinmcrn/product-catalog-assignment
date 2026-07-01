@@ -71,8 +71,7 @@ export function parseProductForm(values: Record<string, unknown>): ProductFormRe
     return { success: false, errors }
   }
   const v = result.data
-  // Blank optional fields are omitted (sent as undefined, which JSON.stringify drops) so the
-  // backend treats them as absent and applies its own defaults.
+
   return {
     success: true,
     data: {
