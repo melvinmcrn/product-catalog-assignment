@@ -109,7 +109,7 @@ watch(
   },
 )
 
-// Descriptions are HTML — always sanitize before previewing via v-html.
+// Descriptions are HTML - always sanitize before previewing via v-html.
 const safeShortDescription = computed(() => DOMPurify.sanitize(values.shortDescription))
 const safeLongDescription = computed(() => DOMPurify.sanitize(values.longDescription))
 const hasDescriptionPreview = computed(() => Boolean(values.shortDescription.trim() || values.longDescription.trim()))

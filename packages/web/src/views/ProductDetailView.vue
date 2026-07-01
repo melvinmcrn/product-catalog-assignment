@@ -14,7 +14,7 @@ const store = useProductStore()
 // Reactive: vue-router reuses this component across product→product navigation, so the id must track the route.
 const productId = computed(() => Number(route.params.id))
 
-// Descriptions contain server-side HTML — always sanitize before v-html, never render raw.
+// Descriptions contain server-side HTML - always sanitize before v-html, never render raw.
 const safeShortDescription = computed(() => (store.current ? DOMPurify.sanitize(store.current.shortDescription) : ''))
 const safeLongDescription = computed(() => (store.current ? DOMPurify.sanitize(store.current.longDescription) : ''))
 
@@ -103,7 +103,7 @@ watch(
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Delete this product?</DialogTitle>
-            <DialogDescription>This permanently removes “{{ store.current.name }}” from the catalog. This can't be undone.</DialogDescription>
+            <DialogDescription>This permanently removes "{{ store.current.name }}" from the catalog. This can't be undone.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" :disabled="store.loading" @click="confirming = false">Cancel</Button>

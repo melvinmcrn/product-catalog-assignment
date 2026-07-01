@@ -1,4 +1,4 @@
-// SQLite adapter bootstrap test — asserts SQLite-specific schema/PRAGMA setup.
+// SQLite adapter bootstrap test - asserts SQLite-specific schema/PRAGMA setup.
 // Engine-agnostic behavior (insert/find/update/delete) belongs in the repository contract suite.
 import fs from 'node:fs'
 import os from 'node:os'

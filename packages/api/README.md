@@ -28,7 +28,7 @@ database is populated. Run it again any time to reset the data.
 |---|---|---|
 | `PORT` | `5001` | HTTP port |
 | `CORS_ORIGIN` | `http://localhost:5173` | Allowed origin for the web app |
-| `NODE_ENV=test` | — | Use an in-memory database |
+| `NODE_ENV=test` | - | Use an in-memory database |
 
 ## Layout
 
@@ -38,21 +38,21 @@ The code is split into layers, each tested on its own, with dependencies pointin
 domain -> db -> repositories -> routes -> app -> index
 ```
 
-- `domain/product.ts` — zod schemas define the product shape and validation rules; the `Product` type
+- `domain/product.ts` - zod schemas define the product shape and validation rules; the `Product` type
   is inferred from them. This is where input is actually validated.
-- `db/connection.ts` — opens the better-sqlite3 connection and creates the table. Uses an in-memory
+- `db/connection.ts` - opens the better-sqlite3 connection and creates the table. Uses an in-memory
   database under `NODE_ENV=test`, otherwise `data/products.db`.
-- `db/seed.ts` — `resetAndSeed(db)` clears the table and re-inserts the mock JSON in one transaction,
+- `db/seed.ts` - `resetAndSeed(db)` clears the table and re-inserts the mock JSON in one transaction,
   keeping the original ids. It's idempotent. `seed.cli.ts` is what `pnpm seed` runs; tests reuse the
   same function.
-- `repositories/productRepository.ts` — the only place that knows SQL. Takes the db in its constructor.
-- `routes/products.ts` — `createProductsRouter(repo)`. Handlers parse the request body and call the
+- `repositories/productRepository.ts` - the only place that knows SQL. Takes the db in its constructor.
+- `routes/products.ts` - `createProductsRouter(repo)`. Handlers parse the request body and call the
   repo. Everything is synchronous, since better-sqlite3 is.
-- `middleware/errorHandler.ts` — turns errors into JSON: zod errors become 422, not-found becomes 404,
+- `middleware/errorHandler.ts` - turns errors into JSON: zod errors become 422, not-found becomes 404,
   anything else becomes 500 (logged, without leaking the message).
-- `app.ts` — `createApp(repo)` wires up cors, json parsing, a health check, the router, and the error
+- `app.ts` - `createApp(repo)` wires up cors, json parsing, a health check, the router, and the error
   handler. The repo is passed in, which is what lets the route tests run against a fake.
-- `index.ts` — wires the real connection, repository and app together and starts listening.
+- `index.ts` - wires the real connection, repository and app together and starts listening.
 
 ## Endpoints
 
@@ -60,12 +60,12 @@ Base path `/api`. Products come back with the same JSON structure as the seed fi
 
 | Method | Path | Purpose | Success | Errors |
 |---|---|---|---|---|
-| GET | `/api/products?search=` | List, with optional search over name/tagline/title | 200 | — |
+| GET | `/api/products?search=` | List, with optional search over name/tagline/title | 200 | - |
 | GET | `/api/products/:id` | One product | 200 | 404 |
 | POST | `/api/products` | Create | 201 | 422 |
 | PUT | `/api/products/:id` | Update | 200 | 404, 422 |
 | DELETE | `/api/products/:id` | Delete | 204 | 404 |
-| GET | `/health` | Liveness check | 200 | — |
+| GET | `/health` | Liveness check | 200 | - |
 
 Errors use the shape `{ "error": { "message": string, "issues"?: ZodIssue[] } }`.
 

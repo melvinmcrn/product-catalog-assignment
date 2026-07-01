@@ -28,16 +28,16 @@ relative `/api` path.
 
 ## Structure
 
-- `api/client.ts` — the axios instance and a response interceptor that turns non-2xx responses into
+- `api/client.ts` - the axios instance and a response interceptor that turns non-2xx responses into
   plain `Error`s with the API's message.
-- `stores/products.ts` — the Pinia store that holds the catalog state and wraps the API client.
-- `validation/productForm.ts` — a copy of the backend's zod rules so the form can validate fields as you
+- `stores/products.ts` - the Pinia store that holds the catalog state and wraps the API client.
+- `validation/productForm.ts` - a copy of the backend's zod rules so the form can validate fields as you
   go. The backend remains the real check.
-- `types/product.ts` — `Product` and `ProductInput`, matching the API.
-- `components/` — the app's components (product form, card, search bar, navbar, and so on).
-- `components/ui/` — shadcn-vue components, vendored into the repo. They're meant to be edited here and
+- `types/product.ts` - `Product` and `ProductInput`, matching the API.
+- `components/` - the app's components (product form, card, search bar, navbar, and so on).
+- `components/ui/` - shadcn-vue components, vendored into the repo. They're meant to be edited here and
   are excluded from Biome. The `cn()` helper is in `lib/utils.ts`.
-- `views/` and `router/` — the pages and the route table.
+- `views/` and `router/` - the pages and the route table.
 
 ## Notes
 

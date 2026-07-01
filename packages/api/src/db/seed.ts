@@ -4,7 +4,7 @@ import type Database from 'better-sqlite3'
 
 import type { Product } from '@/domain/product'
 
-// Seeding inserts the id explicitly to preserve the source ids (e.g. 1679) — allowed alongside AUTOINCREMENT.
+// Seeding inserts the id explicitly to preserve the source ids (e.g. 1679) - allowed alongside AUTOINCREMENT.
 const SEED_FIELDS = [
   'id',
   'gvtId',

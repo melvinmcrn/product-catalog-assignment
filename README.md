@@ -3,8 +3,8 @@
 A small full-stack product catalog. The frontend is Vue 3; the backend is a TypeScript + Express +
 SQLite REST API. It's a pnpm-workspaces monorepo with two packages:
 
-- [`packages/api`](./packages/api) — the REST API
-- [`packages/web`](./packages/web) — the Vue app
+- [`packages/api`](./packages/api) - the REST API
+- [`packages/web`](./packages/web) - the Vue app
 
 The original task brief is kept in [`ASSIGNMENT.md`](./ASSIGNMENT.md).
 
@@ -51,5 +51,5 @@ validates everything with zod and persists to SQLite.
 
 See each package's README for details:
 
-- [`packages/api/README.md`](./packages/api/README.md) — layering, the API contract, and the seed step
-- [`packages/web/README.md`](./packages/web/README.md) — app structure and conventions
+- [`packages/api/README.md`](./packages/api/README.md) - layering, the API contract, and the seed step
+- [`packages/web/README.md`](./packages/web/README.md) - app structure and conventions
