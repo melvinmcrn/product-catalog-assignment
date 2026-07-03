@@ -6,8 +6,6 @@ const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5001'
 
 export const httpClient = axios.create({ baseURL: BASE_URL })
 
-// An error from the API, optionally carrying the backend's per-field validation messages
-// (zod issues) keyed by field name, so a form can show them inline instead of a generic banner.
 export class ApiError extends Error {
   readonly fieldErrors?: Record<string, string>
   constructor(message: string, fieldErrors?: Record<string, string>) {
@@ -30,8 +28,7 @@ function toFieldErrors(issues: unknown): Record<string, string> | undefined {
   return Object.keys(map).length > 0 ? map : undefined
 }
 
-// Map any non-2xx into an ApiError carrying the API's error.message (and any field errors),
-// so the store and views deal with clean messages rather than AxiosError internals.
+// Map any non-2xx into an ApiError carrying the API's error.message (and any field errors).
 httpClient.interceptors.response.use(
   (res) => res,
   (error) => {

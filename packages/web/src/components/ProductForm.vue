@@ -13,7 +13,7 @@ const props = defineProps<{
   submitLabel: string
   initialValues?: ProductInput
   pending?: boolean
-  // Per-field messages from the backend (e.g. a 422), keyed by field name, merged into the inline errors below.
+  // Per-field messages from the backend (e.g. a 422), keyed by field name.
   serverErrors?: Record<string, string>
 }>()
 const emit = defineEmits<{ submit: [values: ProductInput] }>()
@@ -45,7 +45,6 @@ interface FieldConfig {
   numeric?: boolean
 }
 
-// The input length caps come from the zod schema (maxLengthForField), so they can't drift from validation.
 const textFields: FieldConfig[] = [
   { key: 'name', label: 'Name', full: true },
   { key: 'gvtId', label: 'GVT ID', placeholder: 'e.g. 1679', numeric: true },
@@ -67,8 +66,6 @@ const textareaFields: FieldConfig[] = [
 const values = reactive<FormValues>(toFormValues(props.initialValues))
 const errors = ref<Partial<Record<ProductField, string>>>({})
 
-// Merge backend validation errors in as they arrive, so a rejected submit shows messages inline
-// on the offending fields. Client-side blur/submit validation overwrites them once a field changes.
 watch(
   () => props.serverErrors,
   (serverErrors) => {
@@ -78,7 +75,7 @@ watch(
 )
 
 // GVT ID is a numeric-only field: drop anything that isn't a digit as the user types,
-// so the input physically can't hold a non-numeric value (the backend would reject it anyway).
+// so the input physically can't hold a non-numeric value.
 watch(
   () => values.gvtId,
   (value) => {

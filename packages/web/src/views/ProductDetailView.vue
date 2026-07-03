@@ -14,7 +14,7 @@ const store = useProductStore()
 // Reactive: vue-router reuses this component across product→product navigation, so the id must track the route.
 const productId = computed(() => Number(route.params.id))
 
-// Descriptions contain server-side HTML - always sanitize before v-html, never render raw.
+// Descriptions contain server-side HTML - always sanitize before v-html.
 const safeShortDescription = computed(() => (store.current ? DOMPurify.sanitize(store.current.shortDescription) : ''))
 const safeLongDescription = computed(() => (store.current ? DOMPurify.sanitize(store.current.longDescription) : ''))
 
@@ -40,8 +40,7 @@ async function onDelete() {
     await store.remove(productId.value)
     router.push('/')
   } catch (error) {
-    // Keep the product on screen and surface the failure inline so the user can retry,
-    // rather than navigating away or replacing the whole view with an error.
+    // Keep the product on screen and surface the failure inline so the user can retry.
     deleteError.value = (error as Error).message
     confirming.value = false
   }
